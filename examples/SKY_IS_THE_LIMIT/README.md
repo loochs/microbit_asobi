@@ -11,3 +11,8 @@
 - Button A or B
     - Count up
     - You just push them asap!!
+
+## Caution
+
+- Even if you push both of A and B separated, microbit may misunderstands it pushing A + B
+- Then you should push only one button for counting up
