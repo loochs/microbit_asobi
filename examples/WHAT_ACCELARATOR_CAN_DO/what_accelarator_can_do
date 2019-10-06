@@ -1,0 +1,18 @@
+input.onGesture(Gesture.ThreeG, function () {
+    basic.showLeds(`
+        . . . . .
+        . . . . .
+        . # # # .
+        . . . . .
+        . . . . .
+        `)
+    music.playTone(262, music.beat(BeatFraction.Quarter))
+})
+input.onGesture(Gesture.SixG, function () {
+    basic.showIcon(IconNames.SmallHeart)
+    music.playTone(262, music.beat(BeatFraction.Whole))
+})
+input.onGesture(Gesture.EightG, function () {
+    basic.showIcon(IconNames.Heart)
+    music.beginMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
+})
