@@ -7,59 +7,68 @@ class Arm {
     }
 
     stay() {
-        led.plot(0, this.chest_point)
+        led.plot(0, this.chest_point + 1)
         led.plot(1, this.chest_point)
         led.plot(3, this.chest_point)
-        led.plot(4, this.chest_point)
+        led.plot(4, this.chest_point + 1)
     }
 
-    handsDown(which: string) {
-        if (which == "right") {
-            led.plot(0, this.chest_point + 1)
-            led.plot(1, this.chest_point)
-        }
-
-        else if (which == "left") {
-            led.plot(3, this.chest_point)
-            led.plot(4, this.chest_point + 1)
-        }
-
-        else if (which == "both") {
-            led.plot(3, this.chest_point)
-            led.plot(4, this.chest_point + 1)
-        }
+    handsDown() {
+        this.handsDownLeft()
+        this.handsDownRight()
     }
 
-    handsUp(which: string) {
-        if (which == "right") {
-            led.plot(0, this.chest_point - 1)
-            led.plot(1, this.chest_point)
-        }
+    handsDownLeft() {
+        led.plot(0, this.chest_point + 1)
+        led.plot(1, this.chest_point)
+    }
 
-        else if (which == "left") {
-            led.plot(3, this.chest_point)
-            led.plot(4, this.chest_point - 1)
-        }
+    handsDownRight() {
+        led.plot(3, this.chest_point)
+        led.plot(4, this.chest_point + 1)
+    }
 
-        else if (which == "both") {
-            led.plot(3, this.chest_point)
-            led.plot(4, this.chest_point - 1)
-        }
+    handsUp() {
+        this.handsUpLeft()
+        this.handsUpRight()
+    }
+
+    handsUpLeft() {
+        led.unplot(0, this.chest_point + 1)
+        led.plot(0, this.chest_point - 1)
+        led.plot(1, this.chest_point)
+    }
+
+    handsUpRight() {
+        led.plot(3, this.chest_point)
+        led.unplot(4, this.chest_point + 1)
+        led.plot(4, this.chest_point - 1)
     }
 }
 
 class Body {
     temp0: number
-    hip_point: number
-    chest_point: number
+    hipPointX: number
+    hipPointY: number
+    chestPointX: number
+    chestPointY: number
+    neckPointX: number
+    neckPointY: number
     leg: Leg
     arm: Arm
-    constructor(temp0: number, hip_point = 2, chest_point = 1) {
+    constructor(temp0: number,
+        neckPointX = 2, neckPointY = 0,
+        chestPointX = 2, chestPointY = 1,
+        hipPointX = 2, hipPointY = 2, ) {
         this.temp0 = temp0
-        this.hip_point = hip_point
-        this.chest_point = chest_point
-        this.leg = new Leg(this.temp0, this.hip_point)
-        this.arm = new Arm(this.temp0, this.chest_point)
+        this.hipPointX = hipPointX
+        this.hipPointY = hipPointY
+        this.chestPointX = chestPointX
+        this.chestPointY = chestPointY
+        this.neckPointX = neckPointX
+        this.neckPointY = neckPointY
+        this.leg = new Leg(this.temp0, this.hipPointX, this.hipPointY)
+        this.arm = new Arm(this.temp0, this.chestPointY)
     }
 
     footUpLeft() {
@@ -78,48 +87,54 @@ class Body {
     }
 
     handsDownRight() {
-        this.arm.handsDown("right")
+        this.arm.handsDownRight()
         this.pause()
     }
 
     handsDownLeft() {
-        this.arm.handsDown("left")
+        this.arm.handsDownLeft()
         this.pause()
     }
 
     handsDown() {
-        this.arm.handsDown("both")
-        this.arm.handsDown("both")
+        this.arm.handsDown()
         this.pause()
     }
 
     handsUpRight() {
-        this.arm.handsUp("right")
+        this.arm.handsUpRight()
         this.pause()
     }
 
     handsUpLeft() {
-        this.arm.handsUp("left")
+        this.arm.handsUpLeft()
         this.pause()
     }
 
     handsUp() {
-        this.arm.handsUp("both")
-        this.arm.handsUp("both")
+        this.arm.handsUpRight()
+        this.arm.handsUpLeft()
         this.pause()
     }
 
-    hip_change(x: number) {
-        this.hip_point = x
-        this.leg.set_hip(this.hip_point)
+    plotChest() {
+        led.plot(this.chestPointX, this.chestPointY)
+    }
+
+    plotHip() {
+        led.plot(this.hipPointX, this.hipPointY)
+    }
+
+    plotNeck() {
+        led.plot(this.neckPointX, this.neckPointY)
     }
 
     straight(how: string) {
         this.arm.stay()
-        led.plot(2, 0)
-        led.plot(2, this.chest_point)
-        this.hip_change(2)
-        led.plot(this.hip_point, 2)
+        this.plotNeck()
+        this.plotChest()
+        this.shakeHipCenter()
+        this.plotHip()
 
         if (how == "wide") {
             this.leg.wideStand()
@@ -130,18 +145,33 @@ class Body {
         this.pause()
     }
 
+    shakeHipCenter() {
+        this.hipPointX = 2
+        this.leg.set_hip(this.hipPointX)
+    }
+
+    shakeHipLeft() {
+        this.hipPointX = 1
+        this.leg.set_hip(this.hipPointX)
+    }
+
+    shakeHipRight() {
+        this.hipPointX = 3
+        this.leg.set_hip(this.hipPointX)
+    }
+
     shake(which: string, how: string) {
         this.arm.stay()
-        led.plot(2, 0)
-        led.plot(2, 1)
+        this.plotNeck()
+        this.plotChest()
         if (which == "right") {
-            this.hip_change(3)
-            led.plot(this.hip_point, 2)
+            this.shakeHipRight()
+            this.plotHip()
         }
 
         else if (which == "left") {
-            this.hip_change(1)
-            led.plot(this.hip_point, 2)
+            this.shakeHipLeft()
+            this.plotHip()
         }
 
         if (how == "wide") {
@@ -160,24 +190,43 @@ class Body {
 
 class Leg {
     temp0: number
-    hip_point: number
-    leg_point: number
-    constructor(temp0: number, hip_point: number, leg_point = 3) {
+    footPointLeftX: number
+    footPointLeftY: number
+    footPointRightX: number
+    footPointRightY: number
+    legPointLeftX: number
+    legPointLeftY: number
+    legPointRightX: number
+    legPointRightY: number
+    hipPointX: number
+    hipPointY: number
+    constructor(temp0: number, 
+        hipPointX: number, hipPointY: number) {
         this.temp0 = temp0
-        this.hip_point = hip_point
-        this.leg_point = leg_point
+        this.hipPointX = hipPointX
+        this.hipPointY = hipPointY
+        this.legPointLeftX = this.hipPointX - 1
+        this.legPointLeftY = this.hipPointY + 1
+        this.legPointRightX = this.hipPointX + 1
+        this.legPointRightY = this.hipPointY + 1
+        this.footPointLeftX = this.legPointLeftX - 1
+        this.footPointLeftY = this.legPointLeftY + 1
+        this.footPointRightX = this.legPointRightX + 1
+        this.footPointRightY = this.legPointRightY + 1
     }
 
     footUpLeft() {
-        led.plot(this.hip_point - 1, this.leg_point)
-        led.unplot(this.hip_point - 1, this.leg_point + 1)
-        led.plot(this.hip_point - 2, this.leg_point)
+        this.update()
+        this.plotLegLeft()
+        this.unplotFootLeft()
+        this.plotFootLeftUp()
     }
 
     footUpRight() {
-        led.plot(this.hip_point + 1, this.leg_point)
-        led.unplot(this.hip_point + 1, this.leg_point + 1)
-        led.plot(this.hip_point + 2, this.leg_point)
+        this.update()
+        this.plotLegRight()
+        this.unplotFootRight()
+        this.plotFootRightUp()
     }
 
     footUp() {
@@ -186,21 +235,73 @@ class Leg {
     }
 
     normalStand() {
-        led.plot(this.hip_point - 1, this.leg_point)
-        led.plot(this.hip_point - 1, this.leg_point + 1)
-        led.plot(this.hip_point + 1, this.leg_point)
-        led.plot(this.hip_point + 1, this.leg_point + 1)
+        this.update()
+        this.plotLegLeft()
+        this.plotFootLeft()
+        this.plotLegRight()
+        this.plotFootRight()
     }
 
-    set_hip(hip_point: number) {
-        this.hip_point = hip_point
+    plotLegLeft() {
+        led.plot(this.legPointLeftX, this.legPointLeftY)
+    }
+
+    plotLegRight() {
+        led.plot(this.legPointRightX, this.legPointRightY)
+    }
+
+    plotFootLeft() {
+        led.plot(this.footPointLeftX, this.footPointLeftY)
+    }
+
+    plotFootRight() {
+        led.plot(this.footPointRightX, this.footPointRightY)
+    }
+
+    plotFootLeftUp() {
+        led.plot(this.footPointLeftX, this.footPointLeftY - 1)
+    }
+
+    plotFootRightUp() {
+        led.plot(this.footPointRightX, this.footPointRightY - 1)
+    }
+
+    unplotLegLeft() {
+        led.unplot(this.legPointLeftX, this.legPointLeftY)
+    }
+
+    unplotLegRight() {
+        led.unplot(this.legPointRightX, this.legPointRightY)
+    }
+
+    unplotFootLeft() {
+        led.unplot(this.footPointLeftX, this.footPointLeftY)
+    }
+
+    unplotFootRight() {
+        led.unplot(this.footPointRightX, this.footPointRightY)
+    }
+
+    set_hip(hipPoint: number) {
+        this.hipPointX = hipPoint
+    }
+
+    update() {
+        this.legPointLeftX = this.hipPointX - 1
+        this.legPointLeftY = this.hipPointY + 1
+        this.legPointRightX = this.hipPointX + 1
+        this.legPointRightY = this.hipPointY + 1
+        this.footPointLeftX = this.legPointLeftX - 1
+        this.footPointLeftY = this.legPointLeftY + 1
+        this.footPointRightX = this.legPointRightX + 1
+        this.footPointRightY = this.legPointRightY + 1
     }
 
     wideStand() {
-        led.plot(this.hip_point - 1, this.leg_point)
-        led.plot(this.hip_point - 2, this.leg_point + 1)
-        led.plot(this.hip_point + 1, this.leg_point)
-        led.plot(this.hip_point + 2, this.leg_point + 1)
+        // led.plot(this.hipPoint - 1, this.legPoint)
+        // led.plot(this.hipPoint - 2, this.legPoint + 1)
+        // led.plot(this.hipPoint + 1, this.legPoint)
+        // led.plot(this.hipPoint + 2, this.legPoint + 1)
     }
 }
 
@@ -208,7 +309,7 @@ class Man {
     body: Body
     temp0: number
     constructor(temp0: number) {
-        this.body = new Body(temp0, 2, 1);
+        this.body = new Body(temp0);
     }
 
     footUp(how: string) {
@@ -303,12 +404,14 @@ input.onButtonPressed(Button.B, function () {
         man.footUpLeft(how)
         man.footUpRight(how)
         man.footUp(how)
+        man.standStraight(how)
     }
 })
 
 input.onButtonPressed(Button.AB, function () {
     man.standStraight(how)
     for (let index = 0; index < 4; index++) {
+        man.standStraight(how)
         man.shakeHip(how)
         man.handsDown(how)
         man.handsUp(how)
