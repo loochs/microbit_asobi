@@ -6,7 +6,10 @@
 # Function
 
 - Button A
-    - Shaking hip
+    - Dance pattern 1
 
 - Button B
-    - Hands up and down
+    - Dance pattern 2
+
+- Button A + B
+    - Dance pattern 3
