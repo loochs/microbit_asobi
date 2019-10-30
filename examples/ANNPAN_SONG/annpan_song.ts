@@ -7,6 +7,11 @@ function そうだ () {
     music.rest(music.beat(BeatFraction.Half))
 }
 input.onButtonPressed(Button.A, function () {
+    そうだ()
+    恐れないで()
+    みんなの()
+    為に()
+    そうだ()
     恐れないで()
     友達さ()
 })
@@ -33,14 +38,15 @@ function 為に () {
 }
 function 友達さ () {
     music.playTone(440, music.beat(BeatFraction.Whole))
-    music.playTone(494, music.beat(BeatFraction.Quarter))
     music.playTone(440, music.beat(BeatFraction.Half))
-    music.rest(music.beat(BeatFraction.Quarter))
+    music.playTone(494, music.beat(BeatFraction.Half))
+    music.playTone(440, music.beat(BeatFraction.Whole))
+    music.rest(music.beat(BeatFraction.Sixteenth))
     music.playTone(370, music.beat(BeatFraction.Half))
-    music.playTone(370, music.beat(BeatFraction.Quarter))
+    music.playTone(370, music.beat(BeatFraction.Half))
     music.playTone(392, music.beat(BeatFraction.Whole))
     music.playTone(392, music.beat(BeatFraction.Quarter))
 }
 basic.forever(function () {
-	
+    music.setTempo(input.lightLevel())
 })
