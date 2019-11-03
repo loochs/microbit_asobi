@@ -8,4 +8,4 @@
     - Main melody
 
 - Button B
-    - Sub melody will be implemented
+    - Arrange tempo in range of 100 and 300 at random
