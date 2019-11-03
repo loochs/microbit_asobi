@@ -23,6 +23,9 @@ function 恐れないで () {
     music.playTone(392, music.beat(BeatFraction.Whole))
     music.playTone(330, music.beat(BeatFraction.Whole))
 }
+input.onButtonPressed(Button.B, function () {
+    music.setTempo(Math.randomRange(100, 300))
+})
 function みんなの () {
     music.playTone(440, music.beat(BeatFraction.Whole))
     music.playTone(440, music.beat(BeatFraction.Half))
@@ -48,5 +51,5 @@ function 友達さ () {
     music.playTone(392, music.beat(BeatFraction.Quarter))
 }
 basic.forever(function () {
-    music.setTempo(input.lightLevel())
+	
 })
